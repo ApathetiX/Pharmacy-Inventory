@@ -32,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /** Boolean flag that keeps track of whether the drug has been edited (true) or not (false) */
     private boolean mDrugHasChanged = false;
 
+    /** String that keeps track of drug name for email */
+    private String mDrugname;
+
+    /** String that keeps track of drug quantity for email */
+    private String mDrugQuantity;
+
+    /** String that keeps track of price for email */
+    private String mDrugPrice;
+
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the mDrugHasChanged boolean to true.
@@ -77,6 +87,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        // Find the order button
+        Button orderButton = (Button) findViewById(R.id.order_button);
 
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new drug or editing an existing one.
@@ -111,6 +124,23 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // or not, if the user tries to leave the editor without saving.
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
+
+        orderButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                String priceMessage = createOrderSummary(mDrugname, mDrugQuantity, mDrugPrice);
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Pharmacy order");
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+
+            }
+        });
 
     }
 
@@ -320,6 +350,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             Double price = cursor.getDouble(priceColumnIndex);
             int quantitySold = cursor.getInt(quantityColumnIndex);
 
+            mDrugname = name;
+            mDrugQuantity = Integer.toString(quantity);
+            mDrugPrice = Double.toString(price);
+
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mQuantityText.setText(Integer.toString(quantity));
@@ -419,5 +453,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // Close the activity
         finish();
+    }
+
+    /**
+     * Create summary of the order.
+     *
+     * @param name is the drug name
+     * @param quantity is the drug quantity
+     * @param price of the order
+     * @return text summary
+     */
+    private String createOrderSummary(String name, String quantity, String price) {
+        name = mDrugname;
+        quantity = mDrugQuantity;
+        price = mDrugPrice;
+
+        String summary = "Drug Name: " + name;
+        summary += "\n" + "Drug Quantity: " + quantity;
+        summary += "\n" + "Drug Price: " + price;
+        return summary;
     }
 }
