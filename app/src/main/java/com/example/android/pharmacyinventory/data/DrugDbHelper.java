@@ -53,7 +53,8 @@ public class DrugDbHelper extends SQLiteOpenHelper {
                 + DrugContract.DrugEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DrugContract.DrugEntry.COLUMN_DRUG_NAME + " TEXT NOT NULL, "
                 + DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY + " INTEGER DEFAULT 0, "
-                + DrugContract.DrugEntry.COLUMN_DRUG_PRICE + " REAL NOT NULL);";
+                + DrugContract.DrugEntry.COLUMN_DRUG_PRICE + " REAL NOT NULL "
+                + DrugContract.DrugEntry.COLUMN_DRUG_SOLD + " INTEGER DEFAULT 0);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_DRUG_TABLE);
