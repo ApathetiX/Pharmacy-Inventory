@@ -285,7 +285,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 DrugContract.DrugEntry._ID,
                 DrugContract.DrugEntry.COLUMN_DRUG_NAME,
                 DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY,
-                DrugContract.DrugEntry.COLUMN_DRUG_PRICE};
+                DrugContract.DrugEntry.COLUMN_DRUG_PRICE,
+                DrugContract.DrugEntry.COLUMN_DRUG_SOLD};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context

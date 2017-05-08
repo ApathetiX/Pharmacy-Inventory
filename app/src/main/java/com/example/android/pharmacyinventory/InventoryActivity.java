@@ -109,7 +109,8 @@ public class InventoryActivity extends AppCompatActivity implements
         ContentValues values = new ContentValues();
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_NAME, "Ibuprofen");
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY, 5);
-        values.put(DrugContract.DrugEntry.COLUMN_DRUG_PRICE, 3.00);
+        values.put(DrugContract.DrugEntry.COLUMN_DRUG_PRICE, 3.00) ;
+        values.put(DrugContract.DrugEntry.COLUMN_DRUG_SOLD, 0);
 
 
         // Insert a new row for the drug Ibuprogen into the provider using the ContentResolver.
@@ -157,7 +158,8 @@ public class InventoryActivity extends AppCompatActivity implements
         String[] projection = {
                 DrugContract.DrugEntry._ID,
                 DrugContract.DrugEntry.COLUMN_DRUG_NAME,
-                DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY };
+                DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY,
+                DrugContract.DrugEntry.COLUMN_DRUG_SOLD};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context

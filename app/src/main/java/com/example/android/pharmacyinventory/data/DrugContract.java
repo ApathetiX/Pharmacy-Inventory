@@ -100,7 +100,7 @@ public final class DrugContract {
          *
          * Type: INTEGER
          */
-        public final static String COLUMN_DRUG_SOLD = "sold";
+        public final static String COLUMN_DRUG_SOLD = "sales";
 
         /**
          * Price of the drug.
