@@ -15,15 +15,23 @@
  */
 package com.example.android.pharmacyinventory;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.pharmacyinventory.data.DrugContract.DrugEntry;
+
+import static android.R.attr.id;
 
 
 /**
@@ -69,21 +77,53 @@ public class DrugCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(final View view, final Context context, Cursor cursor) {
         // Find individual views that we want to modify in the list item layout
         TextView nameTextView = (TextView) view.findViewById(R.id.name);
         TextView summaryTextView = (TextView) view.findViewById(R.id.summary);
 
+        // Find the sale button
+        Button forSaleButton = (Button) view.findViewById(R.id.sell);
+
         // Find the columns of drug attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(DrugEntry.COLUMN_DRUG_NAME);
         int quantityColumnIndex = cursor.getColumnIndex(DrugEntry.COLUMN_DRUG_QUANTITY);
+        int soldColumnIndex = cursor.getColumnIndex(DrugEntry.COLUMN_DRUG_SOLD);
 
         // Read the drug attributes from the Cursor for the current drug
         String drugName = cursor.getString(nameColumnIndex);
-        int drugQuantity = cursor.getInt(quantityColumnIndex);
+        final int drugQuantity = cursor.getInt(quantityColumnIndex);
+        final int drugSold = cursor.getInt(soldColumnIndex);
 
         // Update the TextViews with the attributes for the current drug
         nameTextView.setText(drugName);
         summaryTextView.setText(String.valueOf(drugQuantity));
+
+        final Uri currentDrugUri = ContentUris.withAppendedId(DrugEntry.CONTENT_URI, id);
+
+        forSaleButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                ContentResolver resolver = view.getContext().getContentResolver();
+                ContentValues values = new ContentValues();
+
+                if (drugQuantity > 0) {
+                    int quantity = drugQuantity;
+                    int sold = drugSold;
+
+                    values.put(DrugEntry.COLUMN_DRUG_QUANTITY, --quantity);
+                    values.put(DrugEntry.COLUMN_DRUG_SOLD, ++sold);
+
+                    resolver.update(
+                            currentDrugUri,
+                            values,
+                            null,
+                            null);
+                } else {
+                    Toast.makeText(context, "Drug out of stock", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

@@ -96,6 +96,13 @@ public final class DrugContract {
         public final static String COLUMN_DRUG_QUANTITY = "quantity";
 
         /**
+         * Quantity sold drug.
+         *
+         * Type: INTEGER
+         */
+        public final static String COLUMN_DRUG_SOLD = "sold";
+
+        /**
          * Price of the drug.
          *
          * Type: INTEGER

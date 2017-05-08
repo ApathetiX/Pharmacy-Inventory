@@ -309,6 +309,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Find the columns of drug attributes that we're interested in
             int nameColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_NAME);
             int quantityColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY);
+            int quantitySoldColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_SOLD);
             int priceColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_PRICE);
 
 
@@ -316,6 +317,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String name = cursor.getString(nameColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
             Double price = cursor.getDouble(priceColumnIndex);
+            int quantitySold = cursor.getInt(quantityColumnIndex);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
@@ -329,7 +331,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     public void onLoaderReset(Loader<Cursor> loader) {
         // If the loader is invalidated, clear out all the data from the input fields.
         mNameEditText.setText("");
-        mQuantityText.setText(0);
+        mQuantityText.setText("");
         mPriceEditText.setText("");
     }
 
