@@ -80,10 +80,10 @@ public class DrugCursorAdapter extends CursorAdapter {
 
         // Read the drug attributes from the Cursor for the current drug
         String drugName = cursor.getString(nameColumnIndex);
-        String drugQuantity = cursor.getString(quantityColumnIndex);
+        int drugQuantity = cursor.getInt(quantityColumnIndex);
 
         // Update the TextViews with the attributes for the current drug
         nameTextView.setText(drugName);
-        summaryTextView.setText(drugQuantity);
+        summaryTextView.setText(String.valueOf(drugQuantity));
     }
 }
