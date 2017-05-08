@@ -319,7 +319,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
-            mQuantityText.setText(quantity);
+            mQuantityText.setText(Integer.toString(quantity));
             mPriceEditText.setText(Double.toString(price));
 
         }
