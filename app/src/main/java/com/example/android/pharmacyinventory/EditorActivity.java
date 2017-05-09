@@ -81,7 +81,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private static final int PICK_IMAGE_REQUEST = 0;
 
-    private String mCurrentImageUri = "no image";
 
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
@@ -184,7 +183,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if(mDrugImageUri != null){
             imageString = mDrugImageUri.toString();
         }else{
-            Toast.makeText(this, "please provide an image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.provide_image, Toast.LENGTH_SHORT).show();
             return;
         }
 

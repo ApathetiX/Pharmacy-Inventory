@@ -107,7 +107,7 @@ public class InventoryActivity extends AppCompatActivity implements
         // Create a ContentValues object where column names are the keys,
         // and Toto's pet attributes are the values.
         ContentValues values = new ContentValues();
-        values.put(DrugContract.DrugEntry.COLUMN_DRUG_NAME, "Ibuprofen");
+        values.put(DrugContract.DrugEntry.COLUMN_DRUG_NAME, R.string.drug_name);
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY, 5);
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_PRICE, 3.00) ;
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_SOLD, 0);

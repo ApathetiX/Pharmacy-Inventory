@@ -43,28 +43,28 @@
     <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
     <string name="discard">Discard</string>
 
-    <!-- Dialog button text for the option to keep editing the current pet [CHAR LIMIT=20] -->
+    <!-- Dialog button text for the option to keep editing the current drug [CHAR LIMIT=20] -->
     <string name="keep_editing">Keep Editing</string>
 
-    <!-- Toast message in editor when current pet was successfully deleted [CHAR LIMIT=NONE] -->
+    <!-- Toast message in editor when current drug was successfully deleted [CHAR LIMIT=NONE] -->
     <string name="editor_delete_drug_successful">Drug deleted</string>
 
-    <!-- Toast message in editor when current pet has failed to be deleted [CHAR LIMIT=NONE] -->
+    <!-- Toast message in editor when current drug has failed to be deleted [CHAR LIMIT=NONE] -->
     <string name="editor_delete_drug_failed">Error with deleting drug</string>
 
-    <!-- Dialog message to ask the user to confirm deleting the current pet [CHAR LIMIT=NONE] -->
+    <!-- Dialog message to ask the user to confirm deleting the current drug [CHAR LIMIT=NONE] -->
     <string name="delete_dialog_msg">Delete this drug?</string>
 
-    <!-- Dialog button text for the option to confirm deleting the current pet [CHAR LIMIT=20] -->
+    <!-- Dialog button text for the option to confirm deleting the current drug [CHAR LIMIT=20] -->
     <string name="delete">Delete</string>
 
-    <!-- Dialog button text for the option to cancel deletion of the current pet [CHAR LIMIT=20] -->
+    <!-- Dialog button text for the option to cancel deletion of the current drug [CHAR LIMIT=20] -->
     <string name="cancel">Cancel</string>
 
     <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
     <string name="category_overview">Overview</string>
 
-    <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
+    <!-- Label for quantity information in the editor [CHAR LIMIT=30] -->
     <string name="category_quantity">Quantity</string>
 
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
@@ -73,24 +73,17 @@
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_drug_name">Name</string>
 
-    <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
+    <!-- Text hint for quantiuty field in the editor [CHAR LIMIT=30] -->
     <string name="hint_drug_quantity">Quantity</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_drug_price">Price</string>
 
-    <!-- Units for weight of the pet (kilograms) [CHAR LIMIT=5] -->
+    <!-- Units for price of the drug (USD) [CHAR LIMIT=5] -->
     <string name="unit_drug_price_unit">USD</string>
 
-    <!-- Label for dropdown menu option if the pet's gender is unknown [CHAR LIMIT=20] -->
-    <string name="gender_unknown">Unknown</string>
+    <string name="provide_image">please provide an image</string>
 
-    <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
-    <string name="gender_male">Male</string>
+    <string name="drug_name">Ibuprofen</string>
 
-    <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
-    <string name="gender_female">Female</string>
-
-    <!-- Label for the pet's breed if the breed is unknown [CHAR LIMIT=20] -->
-    <string name="unknown_breed">Unknown breed</string>
 </resources>
