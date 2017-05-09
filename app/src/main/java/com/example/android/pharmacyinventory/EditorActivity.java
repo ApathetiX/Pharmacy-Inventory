@@ -107,6 +107,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Find the add image button
         mAddImage = (Button) findViewById(R.id.add_image);
 
+
+        // Examine the intent that was used to launch this activity,
+        // in order to figure out if we're creating a new drug or editing an existing one.
+        Intent intent = getIntent();
+        mCurrentDrugUri = intent.getData();
+        mDrugImageUri = intent.getData();
+
         // Show a toast message depending on whether or not the insertion was successful.
         if (mDrugImageUri == null) {
             // If the new content URI is null, then there was an error with insertion.
@@ -117,12 +124,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             Toast.makeText(this, getString(R.string.editor_insert_drug_successful),
                     Toast.LENGTH_SHORT).show();
         }
-
-
-        // Examine the intent that was used to launch this activity,
-        // in order to figure out if we're creating a new drug or editing an existing one.
-        Intent intent = getIntent();
-        mCurrentDrugUri = intent.getData();
 
         // If the intent DOES NOT contain a drug content URI, then we know that we are
         // creating a new drug.
