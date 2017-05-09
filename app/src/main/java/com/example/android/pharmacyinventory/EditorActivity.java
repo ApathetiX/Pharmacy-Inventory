@@ -81,6 +81,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private static final int PICK_IMAGE_REQUEST = 0;
 
+    private String mCurrentImageUri = "no image";
+
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the mDrugHasChanged boolean to true.
@@ -116,6 +118,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // Show a toast message depending on whether or not the insertion was successful.
         if (mDrugImageUri == null) {
+            //User click new product
+            setTitle(getString(R.string.editor_insert_drug_failed));
+
             // If the new content URI is null, then there was an error with insertion.
             Toast.makeText(this, getString(R.string.editor_insert_drug_failed),
                     Toast.LENGTH_SHORT).show();
@@ -544,8 +549,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // provided to this method as a parameter.  Pull that uri using "resultData.getData()"
 
             if (resultData != null) {
+            
                 mDrugImageUri = resultData.getData();
-
 
                 mDrugImage.setImageURI(mDrugImageUri);
             }
