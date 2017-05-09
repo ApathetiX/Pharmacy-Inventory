@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">Pharmacy Inventory</string>
 
-    <!-- Label for overflow menu option that inserts fake pet data into the app [CHAR LIMIT=20] -->
+    <!-- Label for overflow menu option that inserts fake drug data into the app [CHAR LIMIT=20] -->
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
 
-    <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
-    <string name="action_delete_all_entries">Delete All Pets</string>
+    <!-- Label for overflow menu option that deletes all drug data in the app [CHAR LIMIT=20] -->
+    <string name="action_delete_all_entries">Delete All Drugs</string>
 
-    <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
+    <!-- Title text for the empty view [CHAR LIMIT=50] -->
     <string name="empty_view_title_text">It\'s a bit lonely here...</string>
 
-    <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
+    <!-- Subtitle text for the empty view that prompts the user to add a Drug [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Get started by adding a drug</string>
 
     <!-- Title for the activity to add a new drug [CHAR LIMIT=20] -->
@@ -19,19 +19,19 @@
     <!-- Title for the activity to edit an existing drug [CHAR LIMIT=20] -->
     <string name="editor_activity_title_edit_drug">Edit Drug</string>
 
-    <!-- Label for editor menu option to save pet and leave editor [CHAR LIMIT=20] -->
+    <!-- Label for editor menu option to save Drug and leave editor [CHAR LIMIT=20] -->
     <string name="action_save">Save</string>
 
-    <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
+    <!-- Label for editor overflow menu option that deletes the current Drug [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
 
     <!-- Toast message in editor when new pet has been successfully inserted [CHAR LIMIT=NONE] -->
     <string name="editor_insert_drug_successful">Drug saved</string>
 
-    <!-- Toast message in editor when new pet has failed to be inserted [CHAR LIMIT=NONE] -->
+    <!-- Toast message in editor when new drug has failed to be inserted [CHAR LIMIT=NONE] -->
     <string name="editor_insert_drug_failed">Error with saving drug</string>
 
-    <!-- Toast message in editor when current pet was successfully updated [CHAR LIMIT=NONE] -->
+    <!-- Toast message in editor when current drug was successfully updated [CHAR LIMIT=NONE] -->
     <string name="editor_update_drug_successful">Drug updated</string>
 
     <!-- Toast message in editor when current pet has failed to be updated [CHAR LIMIT=NONE] -->

@@ -54,7 +54,7 @@ public class DrugDbHelper extends SQLiteOpenHelper {
                 + DrugContract.DrugEntry.COLUMN_DRUG_NAME + " TEXT NOT NULL, "
                 + DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY + " INTEGER DEFAULT 0, "
                 + DrugContract.DrugEntry.COLUMN_DRUG_SOLD + " INTEGER DEFAULT 0, "
-                + DrugContract.DrugEntry.COLUMN_DRUG_PRICE + " REAL NOT NULL"
+                + DrugContract.DrugEntry.COLUMN_DRUG_PRICE + " REAL NOT NULL, "
                 + DrugContract.DrugEntry.COLUMN_DRUG_IMAGE + " TEXT)";
 
         // Execute the SQL statement
