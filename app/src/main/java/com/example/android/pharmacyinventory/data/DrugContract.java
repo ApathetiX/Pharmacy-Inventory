@@ -109,6 +109,13 @@ public final class DrugContract {
          */
         public final static String COLUMN_DRUG_PRICE = "price";
 
+        /**
+         * Image of the drug.
+         *
+         * Type: TEXT
+         */
+        public final static String COLUMN_DRUG_IMAGE = "image";
+
 
     }
 

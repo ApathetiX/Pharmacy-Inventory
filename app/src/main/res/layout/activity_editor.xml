@@ -1,6 +1,5 @@
 <!-- Layout for the editor -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,23 +15,23 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_overview"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_overview" />
 
         <!-- Input fields -->
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
 
             <!-- Name field -->
             <EditText
                 android:id="@+id/edit_drug_name"
+                style="@style/EditorFieldStyle"
                 android:hint="@string/hint_drug_name"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
+                android:inputType="textCapWords" />
         </LinearLayout>
     </LinearLayout>
 
@@ -45,22 +44,22 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_quantity"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_quantity" />
 
         <!-- Input field -->
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
 
             <!-- Quantity -->
             <EditText
                 android:id="@+id/edit_drug_quantity"
-                android:hint="@string/hint_drug_quantity"
-                style="@style/EditorFieldStyle"/>
+                style="@style/EditorFieldStyle"
+                android:hint="@string/hint_drug_quantity" />
 
         </LinearLayout>
     </LinearLayout>
@@ -74,28 +73,28 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_price"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_price" />
 
         <!-- Input fields -->
         <RelativeLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingLeft="4dp">
 
             <!-- Price field -->
             <EditText
                 android:id="@+id/edit_drug_price"
+                style="@style/EditorFieldStyle"
                 android:hint="@string/hint_drug_price"
-                android:inputType="number"
-                style="@style/EditorFieldStyle" />
+                android:inputType="number" />
 
             <!-- Units for weight (kg) -->
             <TextView
                 android:id="@+id/label_weight_units"
-                android:text="@string/unit_drug_price_unit"
-                style="@style/EditorUnitsStyle"/>
+                style="@style/EditorUnitsStyle"
+                android:text="@string/unit_drug_price_unit" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -105,19 +104,33 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/order_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Order"
-            android:id="@+id/order_button"/>
+            android:text="Order" />
 
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/drug_image"/>
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/add_image"
+            android:text="Add Image"/>
+
+        <ImageView
+            android:id="@+id/drug_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 
 </LinearLayout>

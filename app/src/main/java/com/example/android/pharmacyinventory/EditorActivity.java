@@ -15,8 +15,10 @@
  */
 package com.example.android.pharmacyinventory;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -24,6 +26,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -34,10 +37,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.android.pharmacyinventory.data.DrugContract;
-import com.example.android.pharmacyinventory.data.DrugDbHelper;
 
 import static java.lang.Double.parseDouble;
 
@@ -64,14 +67,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     /** Boolean flag that keeps track of whether the drug has been edited (true) or not (false) */
     private boolean mDrugHasChanged = false;
 
-    /** String that keeps track of drug name for email */
-    private String mDrugname;
+    /** Global order button */
+    private Button orderButton;
 
-    /** String that keeps track of drug quantity for email */
-    private String mDrugQuantity;
+    /** Global image */
+    private Uri mDrugImageUri;
 
-    /** String that keeps track of price for email */
-    private String mDrugPrice;
+    /** Global image */
+    private ImageView mDrugImage;
+
+    /** Global add image button */
+    private Button mAddImage;
+
+    private static final int PICK_IMAGE_REQUEST = 0;
 
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
@@ -90,11 +98,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        // Create instance of database
-        DrugDbHelper db = new DrugDbHelper(this);
-
         // Find the order button
-        Button orderButton = (Button) findViewById(R.id.order_button);
+        orderButton = (Button) findViewById(R.id.order_button);
+
+        // Find the image
+        mDrugImage = (ImageView) findViewById(R.id.drug_image);
+
+        // Find the add image button
+        mAddImage = (Button) findViewById(R.id.add_image);
 
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new drug or editing an existing one.
@@ -131,21 +142,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityText.setOnTouchListener(mTouchListener);
 
-
-        orderButton.setOnClickListener(new View.OnClickListener(){
-
+        mAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String priceMessage = createOrderSummary(mDrugname, mDrugQuantity, mDrugPrice);
-
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-                intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Pharmacy order");
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-
+                openImageSelector();
             }
         });
 
@@ -162,13 +162,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityText.getText().toString().trim();
+        String imageString = mDrugImageUri.toString().trim();
 
         // Check if this is supposed to be a new drug
         // and check if all the fields in the editor are blank
         if (mCurrentDrugUri == null &&
                 TextUtils.isEmpty(nameString) &&
                 TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString)) {
+                TextUtils.isEmpty(quantityString) &&
+                TextUtils.isEmpty(imageString)) {
             // Since no fields were modified, we can return early without creating a new drug.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -194,6 +196,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             price = parseDouble(priceString);
         }
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_PRICE, price);
+
+        values.put(DrugContract.DrugEntry.COLUMN_DRUG_IMAGE, imageString);
 
         // Determine if this is a new or existing drug by checking if mCurrentDrugUri is null or not
         if (mCurrentDrugUri == null) {
@@ -333,7 +337,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 DrugContract.DrugEntry.COLUMN_DRUG_NAME,
                 DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY,
                 DrugContract.DrugEntry.COLUMN_DRUG_PRICE,
-                DrugContract.DrugEntry.COLUMN_DRUG_SOLD};
+                DrugContract.DrugEntry.COLUMN_DRUG_SOLD,
+                DrugContract.DrugEntry.COLUMN_DRUG_IMAGE};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -345,7 +350,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(Loader<Cursor> loader, final Cursor cursor) {
         // Bail early if the cursor is null or there is less than 1 row in the cursor
         if (cursor == null || cursor.getCount() < 1) {
             return;
@@ -358,7 +363,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int nameColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_NAME);
             int quantityColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY);
             int priceColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_PRICE);
-            int quantitySoldColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_SOLD);
+            int imageColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_IMAGE);
 
 
 
@@ -366,27 +371,45 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String name = cursor.getString(nameColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
             Double price = cursor.getDouble(priceColumnIndex);
-            int quantitySold = cursor.getInt(quantityColumnIndex);
-
-            mDrugname = name;
-            mDrugQuantity = Integer.toString(quantity);
-            mDrugPrice = Double.toString(price);
+            String picture = cursor.getString(imageColumnIndex);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mQuantityText.setText(Integer.toString(quantity));
             mPriceEditText.setText(Double.toString(price));
-
+            mDrugImage.setImageURI(Uri.parse(picture));
         }
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the Uri for the current drug
+                int IdColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry._ID);
+                final long itemId = cursor.getLong(IdColumnIndex);
+                Uri mCurrentDrugUri = ContentUris.withAppendedId(DrugContract.DrugEntry.CONTENT_URI, itemId);
+
+                // Find the columns of drug attributes that we're interested in
+                int nameColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_NAME);
+
+
+                // Read the Drug attributes from the Cursor for the current drug
+                String name = cursor.getString(nameColumnIndex);
+
+                // Read the drug name to use in subject line
+                String subjectLine = "Need to order: " + name;
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                intent.putExtra(Intent.EXTRA_EMAIL, "orders@gmail.com");
+                intent.putExtra(Intent.EXTRA_SUBJECT, subjectLine);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // If the loader is invalidated, clear out all the data from the input fields.
-        mNameEditText.setText("");
-        mQuantityText.setText("");
-        mPriceEditText.setText("");
-    }
 
     /**
      * Show a dialog that warns the user there are unsaved changes that will be lost
@@ -473,19 +496,46 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         finish();
     }
 
-    /**
-     * Create summary of the order.
-     *
-     * @param name is the drug name
-     * @param quantity is the drug quantity
-     * @param price of the order
-     * @return text summary
-     */
-    private String createOrderSummary(String name, String quantity, String price) {
-
-        String summary = "Drug Name: " + name;
-        summary += "\n" + "Drug Quantity: " + quantity;
-        summary += "\n" + "Drug Price: " + price;
-        return summary;
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // If the loader is invalidated, clear out all the data from the input fields.
+        mNameEditText.setText("");
+        mQuantityText.setText("");
+        mPriceEditText.setText("");
     }
+
+    public void openImageSelector() {
+        Intent intent;
+
+        if (Build.VERSION.SDK_INT < 19) {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        } else {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        // The ACTION_OPEN_DOCUMENT intent was sent with the request code READ_REQUEST_CODE.
+        // If the request code seen here doesn't match, it's the response to some other intent,
+        // and the below code shouldn't run at all.
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.  Pull that uri using "resultData.getData()"
+
+            if (resultData != null) {
+                mDrugImageUri = resultData.getData();
+
+
+                mDrugImage.setImageURI(mDrugImageUri);
+            }
+        }
+    }
+
 }
