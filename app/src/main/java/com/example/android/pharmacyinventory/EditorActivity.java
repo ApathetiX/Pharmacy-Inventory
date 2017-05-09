@@ -107,6 +107,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Find the add image button
         mAddImage = (Button) findViewById(R.id.add_image);
 
+        // Show a toast message depending on whether or not the insertion was successful.
+        if (mDrugImageUri == null) {
+            // If the new content URI is null, then there was an error with insertion.
+            Toast.makeText(this, getString(R.string.editor_insert_drug_failed),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // Otherwise, the insertion was successful and we can display a toast.
+            Toast.makeText(this, getString(R.string.editor_insert_drug_successful),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new drug or editing an existing one.
         Intent intent = getIntent();
@@ -170,7 +182,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 TextUtils.isEmpty(nameString) &&
                 TextUtils.isEmpty(priceString) &&
                 TextUtils.isEmpty(quantityString) &&
-                TextUtils.isEmpty(imageString)) {
+                mDrugImageUri == null) {
             // Since no fields were modified, we can return early without creating a new drug.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -197,8 +209,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_PRICE, price);
 
-        values.put(DrugContract.DrugEntry.COLUMN_DRUG_IMAGE, imageString);
-
+        if (!TextUtils.isEmpty(imageString)) {
+            values.put(DrugContract.DrugEntry.COLUMN_DRUG_IMAGE, imageString);
+        }
         // Determine if this is a new or existing drug by checking if mCurrentDrugUri is null or not
         if (mCurrentDrugUri == null) {
             // This is a NEW drug, so insert a new drug into the provider,
