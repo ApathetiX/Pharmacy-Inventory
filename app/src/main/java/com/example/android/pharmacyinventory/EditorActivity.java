@@ -180,7 +180,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityText.getText().toString().trim();
-        String imageString = mDrugImageUri.toString().trim();
+        String imageString;
+        if(mDrugImageUri != null){
+            imageString = mDrugImageUri.toString();
+        }else{
+            Toast.makeText(this, "please provide an image", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // Check if this is supposed to be a new drug
         // and check if all the fields in the editor are blank
@@ -549,7 +555,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // provided to this method as a parameter.  Pull that uri using "resultData.getData()"
 
             if (resultData != null) {
-            
+
                 mDrugImageUri = resultData.getData();
 
                 mDrugImage.setImageURI(mDrugImageUri);
