@@ -34,10 +34,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.pharmacyinventory.data.DrugContract;
+import com.example.android.pharmacyinventory.data.DrugDbHelper;
+
+import static java.lang.Double.parseDouble;
 
 /**
  * Allows user to create a new drug or edit an existing one.
@@ -57,7 +59,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
 
     /** TextView field that displays drug quantity */
-    private TextView mQuantityText;
+    private EditText mQuantityText;
 
     /** Boolean flag that keeps track of whether the drug has been edited (true) or not (false) */
     private boolean mDrugHasChanged = false;
@@ -88,6 +90,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
+        // Create instance of database
+        DrugDbHelper db = new DrugDbHelper(this);
+
         // Find the order button
         Button orderButton = (Button) findViewById(R.id.order_button);
 
@@ -117,13 +122,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_drug_name);
         mPriceEditText = (EditText) findViewById(R.id.edit_drug_price);
-        mQuantityText = (TextView) findViewById(R.id.edit_drug_price);
+        mQuantityText = (EditText) findViewById(R.id.edit_drug_quantity);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
         // or not, if the user tries to leave the editor without saving.
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
+        mQuantityText.setOnTouchListener(mTouchListener);
+
 
         orderButton.setOnClickListener(new View.OnClickListener(){
 
@@ -154,12 +161,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
+        String quantityString = mQuantityText.getText().toString().trim();
 
         // Check if this is supposed to be a new drug
         // and check if all the fields in the editor are blank
         if (mCurrentDrugUri == null &&
                 TextUtils.isEmpty(nameString) &&
-                TextUtils.isEmpty(priceString)) {
+                TextUtils.isEmpty(priceString) &&
+                TextUtils.isEmpty(quantityString)) {
             // Since no fields were modified, we can return early without creating a new drug.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -170,11 +179,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         ContentValues values = new ContentValues();
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_NAME, nameString);
 
+        // If the quantity is not provided by the user, don't try to parse the string into an
+        // integer value. Use 0 by default.
+        int quantity = 0;
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(quantityString);
+        }
+        values.put(DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY, quantity);
+
         // If the price is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
         Double price = 0.00;
         if (!TextUtils.isEmpty(priceString)) {
-            price = Double.parseDouble(priceString);
+            price = parseDouble(priceString);
         }
         values.put(DrugContract.DrugEntry.COLUMN_DRUG_PRICE, price);
 
@@ -340,8 +357,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Find the columns of drug attributes that we're interested in
             int nameColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_NAME);
             int quantityColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_QUANTITY);
-            int quantitySoldColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_SOLD);
             int priceColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_PRICE);
+            int quantitySoldColumnIndex = cursor.getColumnIndex(DrugContract.DrugEntry.COLUMN_DRUG_SOLD);
+
 
 
             // Extract out the value from the Cursor for the given column index
@@ -464,9 +482,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      * @return text summary
      */
     private String createOrderSummary(String name, String quantity, String price) {
-        name = mDrugname;
-        quantity = mDrugQuantity;
-        price = mDrugPrice;
 
         String summary = "Drug Name: " + name;
         summary += "\n" + "Drug Quantity: " + quantity;

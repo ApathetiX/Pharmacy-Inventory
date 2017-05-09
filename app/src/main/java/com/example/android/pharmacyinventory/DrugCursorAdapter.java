@@ -80,7 +80,7 @@ public class DrugCursorAdapter extends CursorAdapter {
     public void bindView(final View view, final Context context, Cursor cursor) {
         // Find individual views that we want to modify in the list item layout
         TextView nameTextView = (TextView) view.findViewById(R.id.name);
-        TextView summaryTextView = (TextView) view.findViewById(R.id.summary);
+        TextView quantityTextView = (TextView) view.findViewById(R.id.summary);
 
         // Find the sale button
         Button forSaleButton = (Button) view.findViewById(R.id.sell);
@@ -97,14 +97,14 @@ public class DrugCursorAdapter extends CursorAdapter {
 
         // Update the TextViews with the attributes for the current drug
         nameTextView.setText(drugName);
-        summaryTextView.setText(String.valueOf(drugQuantity));
+        quantityTextView.setText(Integer.toString(drugQuantity));
 
         final Uri currentDrugUri = ContentUris.withAppendedId(DrugEntry.CONTENT_URI, id);
 
         forSaleButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 ContentResolver resolver = view.getContext().getContentResolver();
                 ContentValues values = new ContentValues();
 
@@ -120,7 +120,11 @@ public class DrugCursorAdapter extends CursorAdapter {
                             values,
                             null,
                             null);
-                } else {
+
+                    context.getContentResolver().notifyChange(currentDrugUri, null);
+                }
+
+                else {
                     Toast.makeText(context, "Drug out of stock", Toast.LENGTH_SHORT).show();
                 }
             }

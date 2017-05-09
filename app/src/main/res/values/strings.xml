@@ -74,7 +74,7 @@
     <string name="hint_drug_name">Name</string>
 
     <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_drug_quantity">0</string>
+    <string name="hint_drug_quantity">Quantity</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_drug_price">Price</string>
